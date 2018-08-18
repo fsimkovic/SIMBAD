@@ -1,9 +1,8 @@
-
-docs/api/generated/*.rst
-
 *.py[cod]
+
 .eggs
 .idea
+.pytest_cache
 
 # Sphinx/Jupyter files
 _build
@@ -33,7 +32,7 @@ __pycache__
 pip-log.txt
 
 # Unit test / coverage reports
-.coverage
+.coverage*
 .tox
 nosetests.xml
 

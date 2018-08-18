@@ -1,0 +1,8 @@
+enum34
+mock
+numpy
+pandas
+pyjob
+pytest
+pytest-pep8
+pytest-cov
