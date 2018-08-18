@@ -16,7 +16,8 @@ class Test(unittest.TestCase):
         """Test case for simbad.util.result_by_score_from_csv"""
 
         csv_temp_file = tempfile.NamedTemporaryFile("w", delete=False)
-        csv_temp_file.write("""pdb_code,alt,a,b,c,alpha,beta,gamma,length_penalty,angle_penalty,total_penalty,volume_difference,probability_score
+        csv_temp_file.write(
+            """pdb_code,alt,a,b,c,alpha,beta,gamma,length_penalty,angle_penalty,total_penalty,volume_difference,probability_score
 1DTX, ,23.15,39.06,73.53,90.0,90.0,90.0,0.418,0.0,0.418,398.847,0.842""")
         csv_temp_file.close()
 
@@ -29,7 +30,8 @@ class Test(unittest.TestCase):
         """Test case for simbad.util.result_by_score_from_csv"""
 
         csv_temp_file = tempfile.NamedTemporaryFile("w", delete=False)
-        csv_temp_file.write("""pdb_code,ALPHA,BETA,GAMMA,CC_F,RF_F,CC_I,CC_P,Icp,CC_F_Z_score,CC_P_Z_score,Number_of_rotation_searches_producing_peak
+        csv_temp_file.write(
+            """pdb_code,ALPHA,BETA,GAMMA,CC_F,RF_F,CC_I,CC_P,Icp,CC_F_Z_score,CC_P_Z_score,Number_of_rotation_searches_producing_peak
 2fbb,21.63,81.88,296.6,14.1,56.2,16.5,18.6,1.0,11.6,8.6,5.0
 1f10,34.27,90.0,116.04,13.0,57.1,16.4,14.2,1.0,9.0,7.0,5.0
 4w94,29.28,85.42,245.3,12.9,57.2,15.2,10.8,1.0,8.9,7.1,5.0
@@ -56,7 +58,3 @@ class Test(unittest.TestCase):
         reference_data = ['2fbb', 11.6]
 
         self.assertEqual(data, reference_data)
-
-
-
-

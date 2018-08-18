@@ -34,4 +34,3 @@ class RefmacParser(simbad.parsers._Parser):
                     self.final_r_free = float(fields[-1])
                 else:
                     pass
-

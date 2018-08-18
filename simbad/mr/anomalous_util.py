@@ -92,8 +92,8 @@ class AnodeSearch(object):
         self._space_group, self._resolution, cell_parameters = simbad.util.mtz_util.crystal_data(self.mtz)
         self._cell_parameters = " ".join(map(str, cell_parameters))
 
-        input_model = os.path.join(self.output_dir, model.pdb_code, "mr",
-                                   self.mr_program, "{0}_mr_output.pdb".format(model.pdb_code))
+        input_model = os.path.join(self.output_dir, model.pdb_code, "mr", self.mr_program, "{0}_mr_output.pdb".format(
+            model.pdb_code))
         self.name = model.pdb_code
 
         cwd = os.getcwd()
@@ -134,4 +134,3 @@ SAD {2}"""
     def cleanup(self):
         for i in ["{0}_fa.hkl", "{0}_fa.ins", "{0}_fa.res", "{0}.hkl", "{0}.pha", "{0}.sca"]:
             os.remove(os.path.join(self.work_dir, i.format(self.name)))
-

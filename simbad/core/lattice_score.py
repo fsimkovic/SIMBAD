@@ -10,8 +10,8 @@ from simbad.core import ScoreBase
 class LatticeSearchResult(ScoreBase):
     """A basic lattice parameter scoring class"""
 
-    __slots__ = ('pdb_code', 'pdb_path','alt', 'unit_cell', 'volume_difference', 'total_penalty', 'length_penalty', 'angle_penalty',
-                 'probability_score')
+    __slots__ = ('pdb_code', 'pdb_path', 'alt', 'unit_cell', 'volume_difference', 'total_penalty', 'length_penalty',
+                 'angle_penalty', 'probability_score')
 
     def __init__(self, pdb_code, pdb_path, alt, unit_cell, volume_difference, total_penalty, length_penalty,
                  angle_penalty, probability_score):
@@ -43,4 +43,3 @@ class LatticeSearchResult(ScoreBase):
             else:
                 dictionary[k] = getattr(self, k)
         return dictionary
-

@@ -78,8 +78,15 @@ class PhaserRotationSearch(object):
         self._search_results = None
         self.tested = []
 
-    def run(self, models_dir, nproc=2, min_solvent_content=20, submit_qtype=None,
-            submit_queue=None, monitor=None, chunk_size=0, **kwargs):
+    def run(self,
+            models_dir,
+            nproc=2,
+            min_solvent_content=20,
+            submit_qtype=None,
+            submit_queue=None,
+            monitor=None,
+            chunk_size=0,
+            **kwargs):
         """Run phaser rotation function on a directory of models
         Parameters
         ----------
@@ -157,24 +164,21 @@ class PhaserRotationSearch(object):
                 continue
             mw_diff = abs(predicted_molecular_weight - pdb_struct.molecular_weight)
 
-            info = simbad.core.dat_score.DatModelScore(
-                name, dat_model, mw_diff, None, None, None, None, solvent_fraction, n_copies
-            )
+            info = simbad.core.dat_score.DatModelScore(name, dat_model, mw_diff, None, None, None, None,
+                                                       solvent_fraction, n_copies)
             dat_models.append(info)
 
         sorted_dat_models = sorted(dat_models, key=lambda x: float(x.mw_diff), reverse=False)
 
         iteration_range = range(0, n_files, chunk_size)
         for cycle, i in enumerate(iteration_range):
-            logger.info("Working on chunk %d out of %d", cycle + 1,
-                        total_chunk_cycles)
+            logger.info("Working on chunk %d out of %d", cycle + 1, total_chunk_cycles)
 
             template_model = os.path.join("$CCP4_SCR", "{0}.pdb")
 
             phaser_files = []
             for dat_model in sorted_dat_models[i:i + chunk_size]:
-                logger.debug("Generating script to perform PHASER rotation "
-                             + "function on %s", dat_model.pdb_code)
+                logger.debug("Generating script to perform PHASER rotation " + "function on %s", dat_model.pdb_code)
 
                 pdb_model = template_model.format(dat_model.pdb_code)
                 template_rot_log = os.path.join("$CCP4_SCR", "{0}_rot.log")
@@ -185,18 +189,29 @@ class PhaserRotationSearch(object):
                 rot_log = template_rot_log.format(dat_model.pdb_code)
                 tmp_dir = template_tmp_dir.format(dat_model.pdb_code)
 
-                phaser_cmd = ["simbad.rotsearch.phaser_rotation_search",
-                              "-hklin", self.mtz,
-                              "-f", self.f,
-                              "-sigf", self.sigf,
-                              "-i", self.i,
-                              "-sigi", self.sigi,
-                              "-pdbin", pdb_model,
-                              "-logfile", rot_log,
-                              "-solvent", dat_model.solvent,
-                              "-nmol", dat_model.nmol,
-                              "-work_dir", tmp_dir,
-                              ]
+                phaser_cmd = [
+                    "simbad.rotsearch.phaser_rotation_search",
+                    "-hklin",
+                    self.mtz,
+                    "-f",
+                    self.f,
+                    "-sigf",
+                    self.sigf,
+                    "-i",
+                    self.i,
+                    "-sigi",
+                    self.sigi,
+                    "-pdbin",
+                    pdb_model,
+                    "-logfile",
+                    rot_log,
+                    "-solvent",
+                    dat_model.solvent,
+                    "-nmol",
+                    dat_model.nmol,
+                    "-work_dir",
+                    tmp_dir,
+                ]
                 phaser_cmd = " ".join(str(e) for e in phaser_cmd)
 
                 cmd = [
@@ -208,8 +223,7 @@ class PhaserRotationSearch(object):
                     [EXPORT, "CCP4_SCR=" + ccp4_scr],
                 ]
                 phaser_script = pyjob.misc.make_script(
-                    cmd, directory=script_log_dir, prefix="phaser_", stem=dat_model.pdb_code
-                )
+                    cmd, directory=script_log_dir, prefix="phaser_", stem=dat_model.pdb_code)
                 phaser_log = phaser_script.rsplit(".", 1)[0] + '.log'
                 phaser_files += [(phaser_script, phaser_log, dat_model.dat_path)]
 
@@ -217,8 +231,8 @@ class PhaserRotationSearch(object):
             if len(phaser_files) > 0:
                 logger.info("Running PHASER rotation functions")
                 phaser_scripts, phaser_logs, dat_models = zip(*phaser_files)
-                simbad.rotsearch.submit_chunk(phaser_scripts, script_log_dir, nproc, 'simbad_phaser',
-                                              submit_qtype, submit_queue, monitor, self.rot_succeeded_log)
+                simbad.rotsearch.submit_chunk(phaser_scripts, script_log_dir, nproc, 'simbad_phaser', submit_qtype,
+                                              submit_queue, monitor, self.rot_succeeded_log)
 
                 for dat_model, phaser_log in zip(dat_models, phaser_logs):
                     base = os.path.basename(phaser_log)
@@ -228,9 +242,8 @@ class PhaserRotationSearch(object):
                         if phaser_rotation_parser.rfact:
                             phaser_rotation_parser.llg = 100
                             phaser_rotation_parser.rfz = 10
-                        score = simbad.core.phaser_score.PhaserRotationScore(pdb_code, dat_model,
-                                                                             phaser_rotation_parser.llg,
-                                                                             phaser_rotation_parser.rfz)
+                        score = simbad.core.phaser_score.PhaserRotationScore(
+                            pdb_code, dat_model, phaser_rotation_parser.llg, phaser_rotation_parser.rfz)
 
                         if phaser_rotation_parser.rfz:
                             results += [score]
@@ -257,11 +270,8 @@ class PhaserRotationSearch(object):
             No results found
         """
         from simbad.util import summarize_result
-        columns = [
-            "llg", "rfz"
-        ]
-        summarize_result(self.search_results,
-                         csv_file=csv_file, columns=columns)
+        columns = ["llg", "rfz"]
+        summarize_result(self.search_results, csv_file=csv_file, columns=columns)
 
     @property
     def search_results(self):
@@ -292,29 +302,25 @@ class PhaserRotationSearch(object):
         rot_prog, pdb = os.path.basename(log).replace('.log', '').split('_', 1)
         rotsearch_parser = simbad.parsers.rotsearch_parser.PhaserRotsearchParser(log)
         dat_model = [s for s in self.simbad_dat_files if pdb in s][0]
-        score = simbad.core.phaser_score.PhaserRotationScore(
-            pdb, dat_model, rotsearch_parser.llg, rotsearch_parser.rfz
-        )
+        score = simbad.core.phaser_score.PhaserRotationScore(pdb, dat_model, rotsearch_parser.llg, rotsearch_parser.rfz)
         results = [score]
         if self._rot_job_succeeded(rotsearch_parser.llg) or rotsearch_parser.rfact:
             if pdb not in self.tested:
                 self.tested.append(pdb)
                 output_dir = os.path.join(self.work_dir, "mr_search")
-                mr = simbad.mr.MrSubmit(mtz=self.mtz,
-                                        mr_program=self.mr_program,
-                                        refine_program='refmac5',
-                                        refine_type=None,
-                                        refine_cycles=0,
-                                        output_dir=output_dir,
-                                        sgalternative='none',
-                                        tmp_dir=self.tmp_dir,
-                                        timeout=30)
+                mr = simbad.mr.MrSubmit(
+                    mtz=self.mtz,
+                    mr_program=self.mr_program,
+                    refine_program='refmac5',
+                    refine_type=None,
+                    refine_cycles=0,
+                    output_dir=output_dir,
+                    sgalternative='none',
+                    tmp_dir=self.tmp_dir,
+                    timeout=30)
                 mr.mute = True
-                mr.submit_jobs(results,
-                               nproc=1,
-                               process_all=True,
-                               submit_qtype=self.submit_qtype,
-                               submit_queue=self.submit_queue)
+                mr.submit_jobs(
+                    results, nproc=1, process_all=True, submit_qtype=self.submit_qtype, submit_queue=self.submit_queue)
                 refmac_log = os.path.join(output_dir, pdb, "mr", self.mr_program, "refine", pdb + "_ref.log")
                 if os.path.isfile(refmac_log):
                     refmac_parser = simbad.parsers.refmac_parser.RefmacParser(refmac_log)

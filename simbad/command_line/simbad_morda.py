@@ -20,8 +20,7 @@ logger = None
 
 def morda_argparse():
     """Create the argparse options"""
-    p = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    p = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     simbad.command_line._argparse_core_options(p)
     simbad.command_line._argparse_job_submission_options(p)
     simbad.command_line._argparse_morda_options(p)
@@ -37,16 +36,15 @@ def main():
     args = morda_argparse().parse_args()
 
     args.work_dir = simbad.command_line.get_work_dir(
-        args.run_dir, work_dir=args.work_dir, ccp4_jobid=args.ccp4_jobid, ccp4i2_xml=args.ccp4i2_xml
-    )
+        args.run_dir, work_dir=args.work_dir, ccp4_jobid=args.ccp4_jobid, ccp4i2_xml=args.ccp4i2_xml)
 
     log_file = os.path.join(args.work_dir, 'simbad.log')
     debug_log_file = os.path.join(args.work_dir, 'debug.log')
     log_class = simbad.command_line.LogController()
     log_class.add_console(level=args.debug_lvl)
     log_class.add_logfile(log_file, level="info", format="%(message)s")
-    log_class.add_logfile(debug_log_file, level="notset",
-                          format="%(asctime)s\t%(name)s [%(lineno)d]\t%(levelname)s\t%(message)s")
+    log_class.add_logfile(
+        debug_log_file, level="notset", format="%(asctime)s\t%(name)s [%(lineno)d]\t%(levelname)s\t%(message)s")
     global logger
     logger = log_class.get_logger()
 
@@ -54,8 +52,13 @@ def main():
         raise OSError("amore executable not found")
 
     gui = simbad.util.pyrvapi_results.SimbadOutput(
-        args.rvapi_document, args.webserver_uri, args.display_gui, log_file, args.work_dir, ccp4i2_xml=args.ccp4i2_xml, tab_prefix=args.tab_prefix
-    )
+        args.rvapi_document,
+        args.webserver_uri,
+        args.display_gui,
+        log_file,
+        args.work_dir,
+        ccp4i2_xml=args.ccp4i2_xml,
+        tab_prefix=args.tab_prefix)
 
     simbad.command_line.print_header()
     logger.info("Running in directory: %s\n", args.work_dir)
@@ -75,8 +78,7 @@ def main():
         simbad.util.output_files(args.work_dir, result, args.output_pdb, args.output_mtz)
 
     stopwatch.stop()
-    logger.info("All processing completed in %d days, %d hours, %d minutes, and %d seconds",
-                *stopwatch.time_pretty)
+    logger.info("All processing completed in %d days, %d hours, %d minutes, and %d seconds", *stopwatch.time_pretty)
 
     gui.display_results(True, args.results_to_display)
     if args.rvapi_document:

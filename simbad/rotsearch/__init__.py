@@ -56,9 +56,15 @@ def submit_chunk(chunk_scripts, run_dir, nproc, job_name, submit_qtype, submit_q
 
     """
     j = pyjob.Job(submit_qtype)
-    j.submit(chunk_scripts, directory=run_dir, name=job_name, nproc=nproc,
-             max_array_jobs=nproc, queue=submit_queue, permit_nonzero=True, priority=-10)
+    j.submit(
+        chunk_scripts,
+        directory=run_dir,
+        name=job_name,
+        nproc=nproc,
+        max_array_jobs=nproc,
+        queue=submit_queue,
+        permit_nonzero=True,
+        priority=-10)
     interval = int(math.log(len(chunk_scripts)) / 3)
     interval_in_seconds = interval if interval >= 5 else 5
     j.wait(interval=interval_in_seconds, monitor=monitor, check_success=success_func)
-

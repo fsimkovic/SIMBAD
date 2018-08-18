@@ -28,25 +28,23 @@ class Test(unittest.TestCase):
 
         self.assertEqual(data, reference_data)
 
-
     def test_to_dat(self):
         """Test case for simbad.db._to_dat"""
         input_pdb = os.path.join(CCP4ROOT, "examples", "toxd", "toxd.pdb")
         output_dat = os.path.join(os.getcwd(), "test.dat")
         with open(input_pdb, "r") as f_in, open(output_dat, "wb") as f_out:
             f_out.write(simbad.db._to_dat(f_in))
-        
+
         self.assertTrue(simbad.db.is_valid_dat(output_dat))
-        
+
         with open(input_pdb, "r") as f_in:
             input_str = f_in.read().split('\n')[0]
 
         output_str = simbad.db.read_dat(output_dat).split('\n')[0]
-        
+
         self.assertEqual(input_str, output_str)
 
         os.unlink(output_dat)
-
 
     def test_str_to_dat(self):
         """Test case for simbad.db._str_to_dat"""
@@ -54,15 +52,14 @@ class Test(unittest.TestCase):
         output_dat = os.path.join(os.getcwd(), "test.dat")
         with open(output_dat, "wb") as f_out:
             f_out.write(simbad.db._str_to_dat(input_str))
-        
+
         self.assertTrue(simbad.db.is_valid_dat(output_dat))
-        
+
         output_str = simbad.db.read_dat(output_dat)
-        
+
         self.assertEqual(input_str, output_str)
 
         os.unlink(output_dat)
-
 
     def test_find_simbad_dat_files(self):
         """Test case for simbad.db.find_simbad_dat_files"""
@@ -70,21 +67,19 @@ class Test(unittest.TestCase):
         test_dat_db = os.path.join(simbad_db, 'CHICK', 'LYSC_CHICK', 'P6122')
         data = os.path.basename(simbad.db.find_simbad_dat_files(test_dat_db)[0])
         reference_data = '2fbb.dat'
-        
-        self.assertEqual(data, reference_data)
 
+        self.assertEqual(data, reference_data)
 
     def test_convert_pdb_to_dat(self):
         """Test case for simbad.db.convert_pdb_to_dat"""
         input_pdb = os.path.join(CCP4ROOT, "examples", "toxd", "toxd.pdb")
         output_dat = os.path.join(os.getcwd(), "test.dat")
         simbad.db.convert_pdb_to_dat(input_pdb, output_dat)
-        
+
         self.assertTrue(os.path.isfile(output_dat))
         self.assertTrue(simbad.db.is_valid_dat(output_dat))
-        
-        os.unlink(output_dat)
 
+        os.unlink(output_dat)
 
     def test_convert_dat_to_pdb(self):
         """Test case for simbad.db.convert_dat_to_pdb"""
@@ -92,10 +87,9 @@ class Test(unittest.TestCase):
         input_dat = os.path.join(simbad_db, 'CHICK', 'LYSC_CHICK', 'P6122', '2fbb.dat')
         output_pdb = os.path.join(os.getcwd(), "test.pdb")
         simbad.db.convert_dat_to_pdb(input_dat, output_pdb)
-        
+
         self.assertTrue(os.path.isfile(output_pdb))
         os.unlink(output_pdb)
-
 
     def test_is_valid_dat(self):
         """Test case for simbad.db.is_valid_dat"""
@@ -104,7 +98,6 @@ class Test(unittest.TestCase):
         data = simbad.db.is_valid_dat(input_dat)
 
         self.assertTrue(data)
-
 
     def test_read_dat(self):
         """Test case for simbad.db.read_dat"""
@@ -116,5 +109,3 @@ class Test(unittest.TestCase):
         reference_data = 'HEADER    HYDROLASE                               09-DEC-05   2FBB              '
 
         self.assertEqual(data, reference_data)
-
-

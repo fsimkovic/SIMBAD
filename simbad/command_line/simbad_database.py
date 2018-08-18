@@ -361,7 +361,7 @@ def create_morda_db(database, nproc=2, submit_qtype=None, submit_queue=False, ch
        The queue to submit to on the cluster
     chunk_size : int, optional
        The number of jobs to submit at the same time [default: 5000]
-    
+
     Raises
     ------
     RuntimeError

@@ -12,7 +12,7 @@ class DatModelScore(ScoreBase):
 
     __slots__ = ("pdb_code", "dat_path", "mw_diff", "x", "y", "z", "intrad", "solvent", "nmol")
 
-    def __init__(self, pdb_code, dat_path,  mw_diff, x, y, z, intrad, solvent, nmol):
+    def __init__(self, pdb_code, dat_path, mw_diff, x, y, z, intrad, solvent, nmol):
         self.pdb_code = pdb_code
         self.dat_path = dat_path
         self.mw_diff = mw_diff

@@ -125,11 +125,11 @@ class ExperimentalData(object):
             array_info = miller_array.info()
             if not looks_like_r_free_flags_info(miller_array.info()):
                 new_space_group_info = sgtbx.space_group_info(symbol=new_space_group)
-                new_crystal_symmetry = crystal.symmetry(unit_cell=miller_array.unit_cell(),
-                                                        space_group_info=new_space_group_info,
-                                                        assert_is_compatible_unit_cell=False)
-                miller_array = miller_array.customized_copy(crystal_symmetry=new_crystal_symmetry,
-                                                            info=array_info)
+                new_crystal_symmetry = crystal.symmetry(
+                    unit_cell=miller_array.unit_cell(),
+                    space_group_info=new_space_group_info,
+                    assert_is_compatible_unit_cell=False)
+                miller_array = miller_array.customized_copy(crystal_symmetry=new_crystal_symmetry, info=array_info)
 
             self.add_array_to_mtz_dataset(miller_array)
 
@@ -149,9 +149,7 @@ class ExperimentalData(object):
         array_info = miller.array_info()
         array_info.labels = ['F', 'SIGF']
         self.amplitude_array = intensity_array.customized_copy(
-            observation_type=observation_types.amplitude(),
-            info=array_info
-        )
+            observation_type=observation_types.amplitude(), info=array_info)
         return
 
     def create_anomalous_amplitude_array(self, anomalous_intensity_array):
@@ -170,9 +168,7 @@ class ExperimentalData(object):
         array_info = miller.array_info()
         array_info.labels = ['F(+)', 'F(-)', 'SIGF(+)', 'SIGF(-)']
         self.anomalous_amplitude_array = anomalous_intensity_array.customized_copy(
-            observation_type=observation_types.amplitude(),
-            info=array_info
-        )
+            observation_type=observation_types.amplitude(), info=array_info)
         return
 
     def create_anomalous_intensity_array(self, anomalous_amplitude_array):
@@ -191,9 +187,7 @@ class ExperimentalData(object):
         array_info = miller.array_info()
         array_info.labels = ['I(+)', 'I(-)', 'SIGI(+)', 'SIGI(-)']
         self.anomalous_intensity_array = anomalous_amplitude_array.customized_copy(
-            observation_type=observation_types.intensity(),
-            info=array_info
-        )
+            observation_type=observation_types.intensity(), info=array_info)
         return
 
     def create_merged_intensity_array(self, anomalous_intensity_array):
@@ -213,9 +207,7 @@ class ExperimentalData(object):
         array_info.labels = ['I', 'SIGI']
         merged_intensity_array = anomalous_intensity_array.copy().as_non_anomalous_array().merge_equivalents()
         self.intensity_array = merged_intensity_array.array().customized_copy(
-            observation_type=observation_types.intensity(),
-            info=array_info
-        )
+            observation_type=observation_types.intensity(), info=array_info)
         return
 
     def create_reconstructed_amplitude_array(self, anomalous_amplitude_array):
@@ -234,9 +226,7 @@ class ExperimentalData(object):
         array_info = miller.array_info()
         array_info.labels = ['F', 'SIGF', 'DANO', 'SIGDANO', 'ISYM']
         self.reconstructed_amplitude_array = anomalous_amplitude_array.customized_copy(
-            observation_type=observation_types.reconstructed_amplitude(),
-            info=array_info
-        )
+            observation_type=observation_types.reconstructed_amplitude(), info=array_info)
         return
 
     def get_array_types(self):
@@ -426,7 +416,7 @@ def get_labels(mtz_file):
 
     reflection_file = reflection_file_reader.any_reflection_file(file_name=mtz_file)
     if not reflection_file.file_type() == "ccp4_mtz":
-        msg="File is not of type ccp4_mtz: {0}".format(mtz_file)
+        msg = "File is not of type ccp4_mtz: {0}".format(mtz_file)
         logging.critical(msg)
         raise RuntimeError(msg)
 
@@ -488,4 +478,3 @@ def get_labels(mtz_file):
                 break
 
     return f, fp, i, sigi, dano, sigdano, free
-

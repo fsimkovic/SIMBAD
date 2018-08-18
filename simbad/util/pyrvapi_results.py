@@ -212,18 +212,18 @@ class SimbadOutput(object):
     def init_from_ccp4i2_xml(self, ccp4i2_xml, pyrvapi_dir, share_jsrview, wintitle):
         """This code is largely stolen from Andrew Lebedev"""
 
-        #// Document modes
-        #define RVAPI_MODE_Silent  0x00100000
-        #define RVAPI_MODE_Html    0x00000001
-        #define RVAPI_MODE_Xmli2   0x00000002
+        # // Document modes
+        # define RVAPI_MODE_Silent  0x00100000
+        # define RVAPI_MODE_Html    0x00000001
+        # define RVAPI_MODE_Xmli2   0x00000002
 
         mode = pyrvapi.RVAPI_MODE_Html | bool(ccp4i2_xml) * pyrvapi.RVAPI_MODE_Xmli2
 
-        #// Document layouts
-        #define RVAPI_LAYOUT_Header   0x00000001
-        #define RVAPI_LAYOUT_Toolbar  0x00000002
-        #define RVAPI_LAYOUT_Tabs     0x00000004
-        #define RVAPI_LAYOUT_Full     0x00000007
+        # // Document layouts
+        # define RVAPI_LAYOUT_Header   0x00000001
+        # define RVAPI_LAYOUT_Toolbar  0x00000002
+        # define RVAPI_LAYOUT_Tabs     0x00000004
+        # define RVAPI_LAYOUT_Full     0x00000007
 
         xml_relpath = os.path.relpath(ccp4i2_xml, pyrvapi_dir) if ccp4i2_xml else None
         docid = 'TestRun'

@@ -189,14 +189,14 @@ class LatticeSearch(object):
     @classmethod
     def calculate_volume_difference(cls, query, reference):
         """Calculate the difference in volume between the query unit cell and the reference unit cell
-        
+
         Parameters
         ----------
         query : list, tuple
            The query cell parameters
         reference : list, tuple
            The reference cell parameters
-           
+
         Returns
         -------
         float
@@ -261,7 +261,7 @@ class LatticeSearch(object):
         source : str
            The path to copy results from
         destination : str
-           The path to save results to 
+           The path to save results to
 
         Raises
         ------
@@ -304,7 +304,7 @@ class LatticeSearch(object):
         Parameters
         ----------
         destination : str
-           The path to save results to 
+           The path to save results to
 
         Raises
         ------

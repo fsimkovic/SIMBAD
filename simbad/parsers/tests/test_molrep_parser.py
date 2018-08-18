@@ -54,6 +54,5 @@ Lorem ipsum dolor sit amet ...
             mp = MolrepParser(molrep_log.name)
 
 
-
 if __name__ == "__main__":
     unittest.main()

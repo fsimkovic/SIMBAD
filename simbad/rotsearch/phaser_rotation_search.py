@@ -231,36 +231,26 @@ class Phaser(object):
 
         os.chdir(current_work_dir)
 
+
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='Runs rotation search using PHASER', prefix_chars="-")
 
     group = parser.add_argument_group()
-    group.add_argument('-f', type=str,
-                       help="The column label for F")
-    group.add_argument('-hires', type=float, default=None,
-                       help="The high resolution limit of data used to find/refine this solution")
-    group.add_argument('-hklin', type=str,
-                       help="Path the input hkl file")
-    group.add_argument('-i', type=str,
-                       help="The column label for I")
-    group.add_argument('-logfile', type=str,
-                       help="Path to the ouput log file")
-    group.add_argument('-nmol', type=int,
-                       help="The predicted number of molecules to build")
-    group.add_argument('-pdbin', type=str,
-                       help="Path to the input pdb file")
-    group.add_argument('-sigf', type=str,
-                       help="The column label for SIGF")
-    group.add_argument('-sigi', type=str,
-                       help="The column label for SIGI")
-    group.add_argument('-solvent', type=float,
-                       help="The estimated solvent content of the crystal")
-    group.add_argument('-timeout', type=int, default=0,
-                       help="The time in mins before phaser will kill a job")
-    group.add_argument('-work_dir', type=str,
-                       help="Path to the working directory")
+    group.add_argument('-f', type=str, help="The column label for F")
+    group.add_argument(
+        '-hires', type=float, default=None, help="The high resolution limit of data used to find/refine this solution")
+    group.add_argument('-hklin', type=str, help="Path the input hkl file")
+    group.add_argument('-i', type=str, help="The column label for I")
+    group.add_argument('-logfile', type=str, help="Path to the ouput log file")
+    group.add_argument('-nmol', type=int, help="The predicted number of molecules to build")
+    group.add_argument('-pdbin', type=str, help="Path to the input pdb file")
+    group.add_argument('-sigf', type=str, help="The column label for SIGF")
+    group.add_argument('-sigi', type=str, help="The column label for SIGI")
+    group.add_argument('-solvent', type=float, help="The estimated solvent content of the crystal")
+    group.add_argument('-timeout', type=int, default=0, help="The time in mins before phaser will kill a job")
+    group.add_argument('-work_dir', type=str, help="Path to the working directory")
     args = parser.parse_args()
 
     phaser = Phaser(args.hklin, args.f, args.i, args.logfile, args.nmol, args.pdbin, args.sigf, args.sigi, args.solvent,
