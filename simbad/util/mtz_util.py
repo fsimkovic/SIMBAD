@@ -103,14 +103,9 @@ class ExperimentalData(object):
         bool
             True/False
         """
-
-        if miller_array.anomalous_flag():
-            return True
-        elif miller_array.info().type_hints_from_file == "anomalous_difference":
-            return True
-        elif len(miller_array.info().labels) > 2 and any("+" in label for label in miller_array.info().labels):
-            return True
-        return False
+        return miller_array.anomalous_flag() or \
+               miller_array.info().type_hints_from_file == 'anomalous_difference' or \
+               (len(miller_array.info().labels) > 2 and any('+' in label for label in miller_array.info().labels))
 
     def change_space_group(self, new_space_group):
         """Change space group of input mtz
@@ -119,8 +114,8 @@ class ExperimentalData(object):
         ----------
         new_space_group : str
             The new space group
-        """
 
+        """
         for miller_array in self.all_miller_arrays:
             array_info = miller_array.info()
             if not looks_like_r_free_flags_info(miller_array.info()):
@@ -130,7 +125,6 @@ class ExperimentalData(object):
                     space_group_info=new_space_group_info,
                     assert_is_compatible_unit_cell=False)
                 miller_array = miller_array.customized_copy(crystal_symmetry=new_crystal_symmetry, info=array_info)
-
             self.add_array_to_mtz_dataset(miller_array)
 
     def create_amplitude_array(self, intensity_array):
@@ -169,7 +163,6 @@ class ExperimentalData(object):
         array_info.labels = ['F(+)', 'F(-)', 'SIGF(+)', 'SIGF(-)']
         self.anomalous_amplitude_array = anomalous_intensity_array.customized_copy(
             observation_type=observation_types.amplitude(), info=array_info)
-        return
 
     def create_anomalous_intensity_array(self, anomalous_amplitude_array):
         """Function to create a cctbx anomalous intensity array from a cctbx anomalous amplitude array
@@ -183,12 +176,12 @@ class ExperimentalData(object):
         -------
         self.anomalous_intensity_array : cctbx :obj:
             A cctbx :obj: containing a miller array of anomalous intensities
+
         """
         array_info = miller.array_info()
         array_info.labels = ['I(+)', 'I(-)', 'SIGI(+)', 'SIGI(-)']
         self.anomalous_intensity_array = anomalous_amplitude_array.customized_copy(
             observation_type=observation_types.intensity(), info=array_info)
-        return
 
     def create_merged_intensity_array(self, anomalous_intensity_array):
         """Function to create a cctbs intensity array from a cctbx anomalous intensity array
@@ -208,7 +201,6 @@ class ExperimentalData(object):
         merged_intensity_array = anomalous_intensity_array.copy().as_non_anomalous_array().merge_equivalents()
         self.intensity_array = merged_intensity_array.array().customized_copy(
             observation_type=observation_types.intensity(), info=array_info)
-        return
 
     def create_reconstructed_amplitude_array(self, anomalous_amplitude_array):
         """Function to create a cctbx reconstructed amplitude array from a cctbx anomalous amplitude array
@@ -227,7 +219,6 @@ class ExperimentalData(object):
         array_info.labels = ['F', 'SIGF', 'DANO', 'SIGDANO', 'ISYM']
         self.reconstructed_amplitude_array = anomalous_amplitude_array.customized_copy(
             observation_type=observation_types.reconstructed_amplitude(), info=array_info)
-        return
 
     def get_array_types(self):
         """Function to assign array types contained within cctbx obj, in cases where there are multiple instances of
@@ -277,7 +268,6 @@ class ExperimentalData(object):
             elif miller_array.is_xray_intensity_array() and self.check_anomalous_arrays(miller_array):
                 if not self.anomalous_intensity_array:
                     self.anomalous_intensity_array = miller_array
-        return
 
     def output_mtz(self, output_mtz_file):
         """Function to output an mtz file from processed miller arrays
@@ -294,7 +284,6 @@ class ExperimentalData(object):
         """
         mtz_object = self.mtz_dataset.mtz_object()
         mtz_object.write(file_name=output_mtz_file)
-        return
 
     def process_miller_arrays(self):
         """Function to process the miller arrays needed for SIMBAD
@@ -319,8 +308,6 @@ class ExperimentalData(object):
         self.mtz_dataset : cctbx :obj:
             cctbx mtz obj containing all the miller arrays needed to run SIMBAD
         """
-
-        # Add amplitudes
         if self.reconstructed_amplitude_array:
             self.add_array_to_mtz_dataset(self.reconstructed_amplitude_array)
         elif self.anomalous_amplitude_array:
@@ -336,7 +323,6 @@ class ExperimentalData(object):
             self.create_reconstructed_amplitude_array(self.anomalous_amplitude_array)
             self.add_array_to_mtz_dataset(self.reconstructed_amplitude_array)
 
-        # Add intensities
         if self.intensity_array:
             self.add_array_to_mtz_dataset(self.intensity_array)
         elif self.anomalous_intensity_array:
@@ -348,7 +334,6 @@ class ExperimentalData(object):
         #     logging.critical(msg)
         #     raise RuntimeError(msg)
 
-        # Add free flag
         if self.free_array:
             try:
                 self.add_array_to_mtz_dataset(self.free_array)
@@ -357,7 +342,6 @@ class ExperimentalData(object):
         else:
             self.free_array = self.amplitude_array.generate_r_free_flags(format='ccp4')
             self.add_array_to_mtz_dataset(self.free_array, "FreeR_flag")
-        return
 
 
 def crystal_data(mtz_file):
@@ -412,13 +396,12 @@ def get_labels(mtz_file):
         sigdano column label
     free : str
         free column label
+
     """
 
     reflection_file = reflection_file_reader.any_reflection_file(file_name=mtz_file)
-    if not reflection_file.file_type() == "ccp4_mtz":
-        msg = "File is not of type ccp4_mtz: {0}".format(mtz_file)
-        logging.critical(msg)
-        raise RuntimeError(msg)
+    if not reflection_file.file_type() == 'ccp4_mtz':
+        raise RuntimeError('File is not of type ccp4_mtz: {}'.format(mtz_file))
 
     content = reflection_file.file_content()
     ctypes = content.column_types()
@@ -428,11 +411,9 @@ def get_labels(mtz_file):
     dtype = 'D'
 
     if ftype not in ctypes:
-        msg = "Cannot find any structure amplitudes in: {0}".format(mtz_file)
-        raise RuntimeError(msg)
+        raise RuntimeError('Cannot find any structure amplitudes in: {}'.format(mtz_file))
     f = clabels[ctypes.index(ftype)]
 
-    # FP derived from F
     fp = 'SIG' + f
     fp_alt = 'PHI' + f
     if fp in clabels:
@@ -441,39 +422,32 @@ def get_labels(mtz_file):
         fp = fp_alt
         pass
     else:
-        msg = "Cannot find label {0} or {1} in file: {2}".format(fp, fp_alt, mtz_file)
+        msg = 'Cannot find label {} or {} in file: {}'.format(fp, fp_alt, mtz_file)
         logging.warning(msg)
 
     i, sigi = None, None
     if jtype in ctypes:
         i = clabels[ctypes.index(jtype)]
-
-        # SIGI derired from I
         sigi = 'SIG' + i
         if sigi not in clabels:
-            msg = "Cannot find label {0} in file: {1}".format(sigi, mtz_file)
-            raise RuntimeError(msg)
+            raise RuntimeError('Cannot find label {} in file: {}'.format(sigi, mtz_file))
 
     try:
         if dtype not in ctypes:
-            msg = "Cannot find any structure amplitudes in: {0}".format(mtz_file)
-            raise RuntimeError(msg)
+            raise RuntimeError('Cannot find any structure amplitudes in: {}'.format(mtz_file))
         dano = clabels[ctypes.index(dtype)]
-
-        # SIGDANO derived from DANO
         sigdano = 'SIG' + dano
         if sigdano not in clabels:
-            msg = "Cannot find label {0} in file: {1}".format(sigdano, mtz_file)
-            raise RuntimeError(msg)
+            raise RuntimeError('Cannot find label {} in file: {}'.format(sigdano, mtz_file))
     except RuntimeError:
         dano, sigdano = None, None
 
     free = None
     for label in clabels:
-        for word in ["free", "test", "cross", "status", "flag"]:
+        for word in ['free', 'test', 'cross', 'status', 'flag']:
             if label.lower().find(word) >= 0:
                 if free:
-                    logger.warning("FOUND >1 R FREE label in file!")
+                    logger.warning('FOUND >1 R FREE label in file!')
                 free = label
                 break
 
