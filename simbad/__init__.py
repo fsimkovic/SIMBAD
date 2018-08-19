@@ -15,13 +15,15 @@ __version__ = version.__version__
 import os
 import pyjob
 
-if "CCP4" not in os.environ:
-    raise RuntimeError("Cannot find CCP4 root directory")
+if 'CCP4' not in os.environ:
+    raise RuntimeError('Cannot find CCP4 root directory')
 
 if StrictVersion(pyjob.__version__) < StrictVersion('0.1.3'):
-    raise RuntimeError("Please upgrade PyJOB")
+    raise RuntimeError('Please upgrade Pyjob')
 
-SIMBAD_SHARE_STATIC_DIR = os.path.join(os.environ["CCP4"], "share",
-                                       "simbad", "static")
-LATTICE_DB = os.path.join(SIMBAD_SHARE_STATIC_DIR, "niggli_database.npz")
+if 'PYTEST_SIMBAD_TEST' in os.environ:
+    SIMBAD_SHARE_STATIC_DIR = os.path.join(os.environ['CCP4'], 'static')
+else:
+    SIMBAD_SHARE_STATIC_DIR = os.path.join(os.environ['CCP4'], 'share', 'simbad', 'static')
+LATTICE_DB = os.path.join(SIMBAD_SHARE_STATIC_DIR, 'niggli_database.npz')
 CONTAMINANT_MODELS = os.path.join(SIMBAD_SHARE_STATIC_DIR, 'contaminants')

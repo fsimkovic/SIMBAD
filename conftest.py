@@ -3,6 +3,7 @@ import os
 import pytest
 import sys
 
+os.environ['PYTEST_SIMBAD_TEST'] = 'true'
 os.environ['CCP4'] = os.environ['CCP4_SCR'] = '.'
 
 mock_modules = [
